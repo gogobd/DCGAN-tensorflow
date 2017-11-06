@@ -24,6 +24,9 @@ flags.DEFINE_string("sample_dir", "samples", "Directory name to save the image s
 flags.DEFINE_boolean("train", False, "True for training, False for testing [False]")
 flags.DEFINE_boolean("crop", False, "True for training, False for testing [False]")
 flags.DEFINE_boolean("visualize", False, "True for visualizing, False for nothing [False]")
+flags.DEFINE_integer("test_count", 50, "Number of steps after which to run a test")
+flags.DEFINE_integer("checkpoint_count", 150, "Number of steps after which to save a checkpoint.")
+
 FLAGS = flags.FLAGS
 
 def main(_):
