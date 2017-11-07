@@ -169,24 +169,20 @@ class DCGAN(object):
 
         sample_z = np.random.uniform(-1, 1, size=(self.sample_num, self.z_dim))
 
-        if config.dataset == 'mnist':
-            sample_inputs = self.data_X[0:self.sample_num]
-            sample_labels = self.data_y[0:self.sample_num]
+        sample_files = self.data[0:self.sample_num]
+        sample = [
+            get_image(sample_file,
+                      input_height=self.input_height,
+                      input_width=self.input_width,
+                      resize_height=self.output_height,
+                      resize_width=self.output_width,
+                      crop=self.crop,
+                      grayscale=self.grayscale) for sample_file in sample_files]
+        if (self.grayscale):
+            sample_inputs = np.array(sample).astype(
+                np.float32)[:, :, :, None]
         else:
-            sample_files = self.data[0:self.sample_num]
-            sample = [
-                get_image(sample_file,
-                          input_height=self.input_height,
-                          input_width=self.input_width,
-                          resize_height=self.output_height,
-                          resize_width=self.output_width,
-                          crop=self.crop,
-                          grayscale=self.grayscale) for sample_file in sample_files]
-            if (self.grayscale):
-                sample_inputs = np.array(sample).astype(
-                    np.float32)[:, :, :, None]
-            else:
-                sample_inputs = np.array(sample).astype(np.float32)
+            sample_inputs = np.array(sample).astype(np.float32)
 
         counter = 1
         start_time = time.time()
@@ -197,7 +193,7 @@ class DCGAN(object):
         else:
             print(" [!] Load failed...")
 
-        for epoch in xrange(config.epoch):
+        for epoch in xrange(config.continue_train, config.epoch):
             if config.dataset == 'mnist':
                 batch_idxs = min(len(self.data_X),
                                  config.train_size) // config.batch_size
